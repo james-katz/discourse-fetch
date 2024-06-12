@@ -7,6 +7,7 @@ const { applyExtraSetup } = require('./extra-setup');
 const sequelize = new Sequelize({
 	dialect: 'sqlite',
 	storage: 'forum-db/db.sqlite',
+	logging: false, // Disable query logging
 	logQueryParameters: false,
 	benchmark: false
 });
