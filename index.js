@@ -234,7 +234,9 @@ async function listenForNewPosts() {
                             post_number: post.post_number,
                             reply_to: post.reply_to,
                             discord_id: `${msg.id}`,
-                            createdAt: post.created_at                            
+                            createdAt: new Date(post.created_at),
+                            editedAt: new Date(post.updated_at)
+                          
                         });
                     }
                     catch(e) {
