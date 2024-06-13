@@ -280,7 +280,7 @@ async function listenForNewPosts() {
                         
                         // db_post[0].updatedAt = post_updated;
                         // await db_post[0].save();
-                        db_post[0].update({ updatedAt: post_updated });
+                        await db_post[0].update({ updatedAt: post_updated });
                     }
                     catch(e) {
                         console.log("Error editing message.", e);
