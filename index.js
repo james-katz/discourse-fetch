@@ -179,7 +179,9 @@ function convertHtmlToMarkdown(htmlContent) {
 
 async function sendDiscordMessage(channel, post, thread) {
     const username = post.username;
-    const content = convertHtmlToMarkdown(post.content);
+    let content = convertHtmlToMarkdown(post.content);
+    if(!content || content == '') content = "(error fetching message)";
+
     const messageEmbed = new EmbedBuilder()
         .setColor(0x5dbadd)
         .setAuthor({ name: `${username}`, iconURL: post.avatar_url, url: `${baseUrl}/t/${thread.id}/${post.post_number}` })
