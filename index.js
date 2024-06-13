@@ -277,9 +277,10 @@ async function listenForNewPosts() {
 
                         const msg_ref = await channel.messages.fetch(`${msg_id}`);            
                         await msg_ref.edit( { embeds: [messageEmbed] } );
-
-                        db_post[0].updatedAt = post_updated;
-                        await db_post[0].save();
+                        
+                        // db_post[0].updatedAt = post_updated;
+                        // await db_post[0].save();
+                        db_post[0].update({ updatedAt: post_updated });
                     }
                     catch(e) {
                         console.log("Error editing message.", e);
