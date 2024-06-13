@@ -238,7 +238,6 @@ async function listenForNewPosts() {
                             discord_id: `${msg.id}`,
                             createdAt: new Date(post.created_at),
                             editedAt: new Date(post.updated_at)
-                          
                         });
                     }
                     catch(e) {
@@ -260,7 +259,7 @@ async function listenForNewPosts() {
             });
             if(db_post) {
                 const db_edited = new Date(db_post[0].editedAt);
-                let post_updated = new Date(post.updated_at);   
+                const post_updated = new Date(post.updated_at);   
                 
                 if(post_updated > db_edited) {
                     console.log(`post number ${post.post_number} of thread ${thread.id} was edited.`);
@@ -280,7 +279,7 @@ async function listenForNewPosts() {
                         
                         // db_post[0].updatedAt = post_updated;
                         // await db_post[0].save();
-                        await db_post[0].update({ updatedAt: post_updated });
+                        await db_post[0].update({ editedAt: post_updated });
                     }
                     catch(e) {
                         console.log("Error editing message.", e);
