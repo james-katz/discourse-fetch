@@ -261,7 +261,13 @@ async function listenForNewPosts() {
                 }
             });
             if(db_post[0]) {
-                const db_edited = new Date(db_post[0].editedAt);
+                let db_edited = new Date();
+                try {
+                    db_edited = new Date(db_post[0].editedAt);
+                }
+                catch {
+                    console.log("Error getting db editedAt");
+                }
                 const post_updated = new Date(post.updated_at);   
                 
                 if(post_updated > db_edited) {
