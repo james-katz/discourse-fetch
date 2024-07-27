@@ -222,6 +222,8 @@ async function listenForNewPosts() {
             order: [['post_number', 'DESC']],
             limit: 1
         });
+
+        console.log(`Checking new posts for thread ${thread.id}`);
         const channel_id = thread.discord_channel;
         const channel = await client.channels.fetch(`${channel_id}`);
         const newPosts = allPosts.filter((post) => post.post_number > latestPost[0].post_number);
@@ -251,6 +253,7 @@ async function listenForNewPosts() {
             console.log(`No new posts on thread ${thread.id}`);
         }
         // check for edited posts
+        console.log(`Checking for edited messages on thread ${thread.id}`);
         for (post of allPosts) {
             const db_post = await thread.getPosts({
                 where: {
@@ -264,7 +267,8 @@ async function listenForNewPosts() {
                 if(post_updated > db_edited) {
                     console.log(`post number ${post.post_number} of thread ${thread.id} was edited.`);
 
-                    const new_content = convertHtmlToMarkdown(post.content);
+                    let new_content = convertHtmlToMarkdown(post.content);
+                    if (!new_content || new_content == '') new_content = "(error fetching message)";
                     const msg_id = `${db_post[0].discord_id}`;
 
                     try {
@@ -284,6 +288,9 @@ async function listenForNewPosts() {
                     catch(e) {
                         console.log("Error editing message.", e);
                     }
+                }
+                else {
+                    console.log(`No edits on thread ${thread.id}`);
                 }
             }
         }
@@ -306,6 +313,7 @@ async function fetchAllPosts(threadId) {
     let page = 1;
     let allPosts = [];
     let threadData;
+    let retryCount = 0;
     do {
         threadData = await fetchThreadPage(threadId, page);
         if(threadData && !threadData.error) {            
@@ -325,7 +333,12 @@ async function fetchAllPosts(threadId) {
             allPosts = allPosts.concat(posts);
             page ++;
         }
-    } while(threadData && threadData.post_stream.posts.length > 0);
+        else {
+            console.log("Error trying to fetchs posts, breaking loop");
+            break;
+        }
+        retryCount ++;
+    } while((threadData && threadData.post_stream.posts.length > 0) || retryCount > 30);
     return allPosts;
 }
 
