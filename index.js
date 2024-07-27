@@ -260,7 +260,7 @@ async function listenForNewPosts() {
                     post_number: post.post_number
                 }
             });
-            if(db_post) {
+            if(db_post[0]) {
                 const db_edited = new Date(db_post[0].editedAt);
                 const post_updated = new Date(post.updated_at);   
                 
