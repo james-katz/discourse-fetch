@@ -289,9 +289,6 @@ async function listenForNewPosts() {
                         console.log("Error editing message.", e);
                     }
                 }
-                else {
-                    console.log(`No edits on thread ${thread.id}`);
-                }
             }
         }
     }
