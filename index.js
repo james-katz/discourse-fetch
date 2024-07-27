@@ -8,6 +8,7 @@ const axios = require('axios');
 dotenv.config();
 
 let dataLock = false;
+const INTERVAL_MINUTES = 2;
 
 async function assertDatabaseConnectionOk() {
 	console.log(`Checking database connection...`);
@@ -36,7 +37,7 @@ client.once('ready', async () => {
     await assertDatabaseConnectionOk();
     setInterval(async () => {
         await listenForNewPosts();
-    }, 2 * 60 * 1000);
+    }, INTERVAL_MINUTES * 60 * 1000);
     console.log("Ready!");    
 });
 
@@ -299,6 +300,7 @@ async function listenForNewPosts() {
         }
     }
     dataLock = false;
+    console.log(`Done, will listen again in ${INTERVAL_MINUTES} minutes`);
 }
 
 async function fetchThreadPage(topicId, page) {
@@ -337,10 +339,10 @@ async function fetchAllPosts(threadId) {
             page ++;
         }
         else {
-            console.log("Error trying to fetchs posts, breaking loop");
+            console.log("Error trying to fetch posts, breaking loop");
             break;
         }
-        retryCount ++;
+        // retryCount ++;
     } while((threadData && threadData.post_stream.posts.length > 0) || retryCount > 30);
     return allPosts;
 }
